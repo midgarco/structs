@@ -35,6 +35,7 @@
 // ```go
 //
 // // Convert a struct to a map[string]any
+//
 // // => {"Name":"gopher", "ID":123456, "Enabled":true}
 // m := structs.Map(server)
 //
@@ -71,6 +72,7 @@
 // structs (such as retrieving a single Field).
 //
 // ```go
+//
 // // Create a new struct type:
 // s := structs.New(server)
 //
@@ -83,6 +85,7 @@
 // n := s.Name()             // Get the struct name
 // h := s.HasZero()          // Check if any field is uninitialized
 // z := s.IsZero()           // Check if all fields are uninitialized
+//
 // ```
 //
 // ### Field methods
@@ -91,6 +94,7 @@
 // get and interact with various field methods:
 //
 // ```go
+//
 // s := structs.New(server)
 //
 // // Get the Field struct for the "Name" field
@@ -125,11 +129,13 @@
 //
 // // Get the Field's tag value for tag name "json", tag value => "name,omitempty"
 // tagValue := name.Tag("json")
+//
 // ```
 //
 // Nested structs are supported too:
 //
 // ```go
+//
 // addrField := s.Field("Server").Field("Addr")
 //
 // // Get the value for addr
@@ -137,12 +143,14 @@
 //
 // // Or get all fields
 // httpServer := s.Field("Server").Fields()
+//
 // ```
 //
 // We can also get a slice of Fields from the Struct type to iterate over all
 // fields. This is handy if you wish to examine all fields:
 //
 // ```go
+//
 // s := structs.New(server)
 //
 //	for _, f := range s.Fields() {
