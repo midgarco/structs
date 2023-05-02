@@ -6,9 +6,7 @@
 //
 // ## Install
 //
-// ```bash
-// go get go.devnw.com/structs
-// ```
+// `go get go.devnw.com/structs`
 //
 // ## Usage and Examples
 //
@@ -35,6 +33,7 @@
 // ```
 //
 // ```go
+//
 // // Convert a struct to a map[string]any
 // // => {"Name":"gopher", "ID":123456, "Enabled":true}
 // m := structs.Map(server)
@@ -62,6 +61,7 @@
 //
 // // Check if server is a struct or a pointer to struct
 // i := structs.IsStruct(server)
+//
 // ```
 //
 // ### Struct methods
