@@ -8,6 +8,18 @@ I've added other utilities for structs. It's basically a high level package
 based on primitives from the reflect package. Feel free to add new functions or
 improve the existing code.
 
+[![Build & Test Action
+Status](https://github.com/devnw/structs/actions/workflows/build.yml/badge.svg)](https://github.com/devnw/structs/actions)
+[![Go Report
+Card](https://goreportcard.com/badge/go.devnw.com/structs)](https://goreportcard.com/report/go.devnw.com/structs)
+[![codecov](https://codecov.io/gh/devnw/structs/branch/main/graph/badge.svg)](https://codecov.io/gh/devnw/structs)
+[![Go
+Reference](https://pkg.go.dev/badge/go.devnw.com/structs.svg)](https://pkg.go.dev/go.devnw.com/structs)
+[![License: MIT
+2.0](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/license/mit-0/)
+[![PRs
+Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+
 ## Install
 
 `go get go.devnw.com/structs`
