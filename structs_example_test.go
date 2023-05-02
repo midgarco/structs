@@ -27,7 +27,6 @@ func ExampleNew() {
 	// Name        : Server
 	// Values      : [Arslan 123456 true]
 	// Value of ID : 123456
-
 }
 
 func ExampleMap() {
@@ -52,7 +51,6 @@ func ExampleMap() {
 	// "Arslan"
 	// 123456
 	// true
-
 }
 
 func ExampleMap_tags() {
@@ -78,7 +76,6 @@ func ExampleMap_tags() {
 	// "Zeynep"
 	// 789012
 	// false
-
 }
 
 func ExampleMap_omitNested() {
@@ -87,7 +84,7 @@ func ExampleMap_omitNested() {
 	type Server struct {
 		Name string    `structs:"server_name"`
 		ID   int32     `structs:"server_id"`
-		Time time.Time `structs:"time,omitnested"` // do not convert to map[string]interface{}
+		Time time.Time `structs:"time,omitnested"` // do not convert to map[string]any
 	}
 
 	const shortForm = "2006-Jan-02"
@@ -291,7 +288,6 @@ func ExampleField() {
 
 	// Output:
 	// Value of Person.Access.Name: fatih
-
 }
 
 func ExampleIsZero() {

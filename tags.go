@@ -2,10 +2,10 @@ package structs
 
 import "strings"
 
-// tagOptions contains a slice of tag options
+// tagOptions contains a slice of tag options.
 type tagOptions []string
 
-// Has returns true if the given option is available in tagOptions
+// Has returns true if the given option is available in tagOptions.
 func (t tagOptions) Has(opt string) bool {
 	for _, tagOpt := range t {
 		if tagOpt == opt {

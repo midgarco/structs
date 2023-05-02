@@ -297,3 +297,6 @@ issues:
         - errcheck
         - lll
         - gochecknoglobals
+        - gocritic
+        - staticcheck
+        - unused

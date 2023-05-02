@@ -24,13 +24,13 @@ func TestMapNonStruct(t *testing.T) {
 func TestStructIndexes(t *testing.T) {
 	type C struct {
 		something int
-		Props     map[string]interface{}
+		Props     map[string]any
 	}
 
 	defer func() {
 		err := recover()
 		if err != nil {
-			fmt.Printf("err %+v\n", err)
+			t.Logf("err %+v\n", err)
 			t.Error("Using mixed indexes should not panic")
 		}
 	}()
@@ -65,7 +65,7 @@ func TestMap(t *testing.T) {
 		t.Errorf("Map should return a map of len 3, got: %d", len(a))
 	}
 
-	inMap := func(val interface{}) bool {
+	inMap := func(val any) bool {
 		for _, v := range a {
 			if reflect.DeepEqual(v, val) {
 				return true
@@ -75,12 +75,11 @@ func TestMap(t *testing.T) {
 		return false
 	}
 
-	for _, val := range []interface{}{"a-value", 2, true} {
+	for _, val := range []any{"a-value", 2, true} {
 		if !inMap(val) {
 			t.Errorf("Map should have the value %v", val)
 		}
 	}
-
 }
 
 func TestMap_Tag(t *testing.T) {
@@ -96,7 +95,7 @@ func TestMap_Tag(t *testing.T) {
 
 	a := Map(T)
 
-	inMap := func(key interface{}) bool {
+	inMap := func(key any) bool {
 		for k := range a {
 			if reflect.DeepEqual(k, key) {
 				return true
@@ -110,7 +109,6 @@ func TestMap_Tag(t *testing.T) {
 			t.Errorf("Map should have the key %v", key)
 		}
 	}
-
 }
 
 func TestMap_CustomTag(t *testing.T) {
@@ -133,7 +131,7 @@ func TestMap_CustomTag(t *testing.T) {
 
 	a := s.Map()
 
-	inMap := func(key interface{}) bool {
+	inMap := func(key any) bool {
 		for k := range a {
 			if reflect.DeepEqual(k, key) {
 				return true
@@ -148,7 +146,7 @@ func TestMap_CustomTag(t *testing.T) {
 		}
 	}
 
-	nested, ok := a["nested"].(map[string]interface{})
+	nested, ok := a["nested"].(map[string]any)
 	if !ok {
 		t.Fatalf("Map should contain the D field that is tagged as 'nested'")
 	}
@@ -161,7 +159,6 @@ func TestMap_CustomTag(t *testing.T) {
 	if e != "e-value" {
 		t.Errorf("D.E field should be equal to 'e-value', got: '%v'", e)
 	}
-
 }
 
 func TestMap_MultipleCustomTag(t *testing.T) {
@@ -180,11 +177,11 @@ func TestMap_MultipleCustomTag(t *testing.T) {
 	bStruct.TagName = "bb"
 
 	a, b := aStruct.Map(), bStruct.Map()
-	if !reflect.DeepEqual(a, map[string]interface{}{"ax": "a_value"}) {
+	if !reflect.DeepEqual(a, map[string]any{"ax": "a_value"}) {
 		t.Error("Map should have field ax with value a_value")
 	}
 
-	if !reflect.DeepEqual(b, map[string]interface{}{"bx": "b_value"}) {
+	if !reflect.DeepEqual(b, map[string]any{"bx": "b_value"}) {
 		t.Error("Map should have field bx with value b_value")
 	}
 }
@@ -199,12 +196,12 @@ func TestMap_OmitEmpty(t *testing.T) {
 
 	m := Map(a)
 
-	_, ok := m["Value"].(map[string]interface{})
+	_, ok := m["Value"].(map[string]any)
 	if ok {
 		t.Error("Map should not contain the Value field that is tagged as omitempty")
 	}
 
-	_, ok = m["Time"].(map[string]interface{})
+	_, ok = m["Time"].(map[string]any)
 	if ok {
 		t.Error("Map should not contain the Time field that is tagged as omitempty")
 	}
@@ -226,13 +223,13 @@ func TestMap_OmitNested(t *testing.T) {
 
 	m := Map(b)
 
-	in, ok := m["A"].(map[string]interface{})
+	in, ok := m["A"].(map[string]any)
 	if !ok {
 		t.Error("Map nested structs is not available in the map")
 	}
 
 	// should not happen
-	if _, ok := in["Time"].(map[string]interface{}); ok {
+	if _, ok := in["Time"].(map[string]any); ok {
 		t.Error("Map nested struct should omit recursiving parsing of Time")
 	}
 
@@ -258,7 +255,7 @@ func TestMap_Nested(t *testing.T) {
 		t.Errorf("Map should return a map type, got: %v", typ)
 	}
 
-	in, ok := m["A"].(map[string]interface{})
+	in, ok := m["A"].(map[string]any)
 	if !ok {
 		t.Error("Map nested structs is not available in the map")
 	}
@@ -291,12 +288,12 @@ func TestMap_NestedMapWithStructValues(t *testing.T) {
 		t.Errorf("Map should return a map type, got: %v", typ)
 	}
 
-	in, ok := m["A"].(map[string]interface{})
+	in, ok := m["A"].(map[string]any)
 	if !ok {
-		t.Errorf("Nested type of map should be of type map[string]interface{}, have %T", m["A"])
+		t.Errorf("Nested type of map should be of type map[string]any, have %T", m["A"])
 	}
 
-	example := in["example_key"].(map[string]interface{})
+	example := in["example_key"].(map[string]any)
 	if name := example["Name"].(string); name != "example" {
 		t.Errorf("Map nested struct's name field should give example, got: %s", name)
 	}
@@ -325,9 +322,9 @@ func TestMap_NestedMapWithStringValues(t *testing.T) {
 		t.Errorf("Map should return a map type, got: %v", typ)
 	}
 
-	in, ok := m["B"].(map[string]interface{})
+	in, ok := m["B"].(map[string]any)
 	if !ok {
-		t.Errorf("Nested type of map should be of type map[string]interface{}, have %T", m["B"])
+		t.Errorf("Nested type of map should be of type map[string]any, have %T", m["B"])
 	}
 
 	foo := in["Foo"].(map[string]string)
@@ -335,9 +332,10 @@ func TestMap_NestedMapWithStringValues(t *testing.T) {
 		t.Errorf("Map nested struct's name field should give example, got: %s", name)
 	}
 }
+
 func TestMap_NestedMapWithInterfaceValues(t *testing.T) {
 	type B struct {
-		Foo map[string]interface{}
+		Foo map[string]any
 	}
 
 	type A struct {
@@ -345,7 +343,7 @@ func TestMap_NestedMapWithInterfaceValues(t *testing.T) {
 	}
 
 	b := &B{
-		Foo: map[string]interface{}{
+		Foo: map[string]any{
 			"example_key": "example",
 		},
 	}
@@ -358,12 +356,12 @@ func TestMap_NestedMapWithInterfaceValues(t *testing.T) {
 		t.Errorf("Map should return a map type, got: %v", typ)
 	}
 
-	in, ok := m["B"].(map[string]interface{})
+	in, ok := m["B"].(map[string]any)
 	if !ok {
-		t.Errorf("Nested type of map should be of type map[string]interface{}, have %T", m["B"])
+		t.Errorf("Nested type of map should be of type map[string]any, have %T", m["B"])
 	}
 
-	foo := in["Foo"].(map[string]interface{})
+	foo := in["Foo"].(map[string]any)
 	if name := foo["example_key"]; name != "example" {
 		t.Errorf("Map nested struct's name field should give example, got: %s", name)
 	}
@@ -392,9 +390,9 @@ func TestMap_NestedMapWithSliceIntValues(t *testing.T) {
 		t.Errorf("Map should return a map type, got: %v", typ)
 	}
 
-	in, ok := m["B"].(map[string]interface{})
+	in, ok := m["B"].(map[string]any)
 	if !ok {
-		t.Errorf("Nested type of map should be of type map[string]interface{}, have %T", m["B"])
+		t.Errorf("Nested type of map should be of type map[string]any, have %T", m["B"])
 	}
 
 	foo := in["Foo"].(map[string][]int)
@@ -431,18 +429,18 @@ func TestMap_NestedMapWithSliceStructValues(t *testing.T) {
 		t.Errorf("Map should return a map type, got: %v", typ)
 	}
 
-	in, ok := m["B"].(map[string]interface{})
+	in, ok := m["B"].(map[string]any)
 	if !ok {
-		t.Errorf("Nested type of map should be of type map[string]interface{}, have %T", m["B"])
+		t.Errorf("Nested type of map should be of type map[string]any, have %T", m["B"])
 	}
 
-	foo := in["Foo"].(map[string]interface{})
+	foo := in["Foo"].(map[string]any)
 
-	addresses := foo["example_key"].([]interface{})
+	addresses := foo["example_key"].([]any)
 
-	addr, ok := addresses[0].(map[string]interface{})
+	addr, ok := addresses[0].(map[string]any)
 	if !ok {
-		t.Errorf("Nested type of map should be of type map[string]interface{}, have %T", m["B"])
+		t.Errorf("Nested type of map should be of type map[string]any, have %T", m["B"])
 	}
 
 	if _, exists := addr["country"]; !exists {
@@ -469,12 +467,12 @@ func TestMap_NestedSliceWithStructValues(t *testing.T) {
 	}
 	mp := Map(p)
 
-	mpAddresses := mp["addresses"].([]interface{})
-	if _, exists := mpAddresses[0].(map[string]interface{})["Country"]; exists {
+	mpAddresses := mp["addresses"].([]any)
+	if _, exists := mpAddresses[0].(map[string]any)["Country"]; exists {
 		t.Errorf("Expecting customCountryName, but found Country")
 	}
 
-	if _, exists := mpAddresses[0].(map[string]interface{})["customCountryName"]; !exists {
+	if _, exists := mpAddresses[0].(map[string]any)["customCountryName"]; !exists {
 		t.Errorf("customCountryName key not found")
 	}
 }
@@ -498,12 +496,12 @@ func TestMap_NestedSliceWithPointerOfStructValues(t *testing.T) {
 	}
 	mp := Map(p)
 
-	mpAddresses := mp["addresses"].([]interface{})
-	if _, exists := mpAddresses[0].(map[string]interface{})["Country"]; exists {
+	mpAddresses := mp["addresses"].([]any)
+	if _, exists := mpAddresses[0].(map[string]any)["Country"]; exists {
 		t.Errorf("Expecting customCountryName, but found Country")
 	}
 
-	if _, exists := mpAddresses[0].(map[string]interface{})["customCountryName"]; !exists {
+	if _, exists := mpAddresses[0].(map[string]any)["customCountryName"]; !exists {
 		t.Errorf("customCountryName key not found")
 	}
 }
@@ -548,7 +546,7 @@ func TestMap_Anonymous(t *testing.T) {
 		t.Errorf("Map should return a map type, got: %v", typ)
 	}
 
-	in, ok := m["A"].(map[string]interface{})
+	in, ok := m["A"].(map[string]any)
 	if !ok {
 		t.Error("Embedded structs is not available in the map")
 	}
@@ -573,16 +571,15 @@ func TestMap_Flatnested(t *testing.T) {
 
 	m := Map(b)
 
-	_, ok := m["A"].(map[string]interface{})
+	_, ok := m["A"].(map[string]any)
 	if ok {
 		t.Error("Embedded A struct with tag flatten has to be flat in the map")
 	}
 
-	expectedMap := map[string]interface{}{"Name": "example", "C": 123}
+	expectedMap := map[string]any{"Name": "example", "C": 123}
 	if !reflect.DeepEqual(m, expectedMap) {
 		t.Errorf("The exprected map %+v does't correspond to %+v", expectedMap, m)
 	}
-
 }
 
 func TestMap_FlatnestedOverwrite(t *testing.T) {
@@ -601,12 +598,12 @@ func TestMap_FlatnestedOverwrite(t *testing.T) {
 
 	m := Map(b)
 
-	_, ok := m["A"].(map[string]interface{})
+	_, ok := m["A"].(map[string]any)
 	if ok {
 		t.Error("Embedded A struct with tag flatten has to be flat in the map")
 	}
 
-	expectedMap := map[string]interface{}{"Name": "bName", "C": 123}
+	expectedMap := map[string]any{"Name": "bName", "C": 123}
 	if !reflect.DeepEqual(m, expectedMap) {
 		t.Errorf("The exprected map %+v does't correspond to %+v", expectedMap, m)
 	}
@@ -637,7 +634,7 @@ func TestFillMap(t *testing.T) {
 		C: true,
 	}
 
-	a := make(map[string]interface{}, 0)
+	a := make(map[string]any, 0)
 	FillMap(T, a)
 
 	// we have three fields
@@ -645,7 +642,7 @@ func TestFillMap(t *testing.T) {
 		t.Errorf("FillMap should fill a map of len 3, got: %d", len(a))
 	}
 
-	inMap := func(val interface{}) bool {
+	inMap := func(val any) bool {
 		for _, v := range a {
 			if reflect.DeepEqual(v, val) {
 				return true
@@ -655,7 +652,7 @@ func TestFillMap(t *testing.T) {
 		return false
 	}
 
-	for _, val := range []interface{}{"a-value", 2, true} {
+	for _, val := range []any{"a-value", 2, true} {
 		if !inMap(val) {
 			t.Errorf("FillMap should have the value %v", val)
 		}
@@ -683,6 +680,7 @@ func TestFillMap_Nil(t *testing.T) {
 	// nil should no
 	FillMap(T, nil)
 }
+
 func TestStruct(t *testing.T) {
 	var T = struct{}{}
 
@@ -693,7 +691,6 @@ func TestStruct(t *testing.T) {
 	if !IsStruct(&T) {
 		t.Errorf("T should be a struct, got: %T", T)
 	}
-
 }
 
 func TestValues(t *testing.T) {
@@ -713,7 +710,7 @@ func TestValues(t *testing.T) {
 		t.Errorf("Values should return a slice type, got: %v", typ)
 	}
 
-	inSlice := func(val interface{}) bool {
+	inSlice := func(val any) bool {
 		for _, v := range s {
 			if reflect.DeepEqual(v, val) {
 				return true
@@ -722,7 +719,7 @@ func TestValues(t *testing.T) {
 		return false
 	}
 
-	for _, val := range []interface{}{"a-value", 2, true} {
+	for _, val := range []any{"a-value", 2, true} {
 		if !inSlice(val) {
 			t.Errorf("Values should have the value %v", val)
 		}
@@ -770,7 +767,7 @@ func TestValues_OmitNested(t *testing.T) {
 		t.Errorf("Values of omitted nested struct should be not counted")
 	}
 
-	inSlice := func(val interface{}) bool {
+	inSlice := func(val any) bool {
 		for _, v := range s {
 			if reflect.DeepEqual(v, val) {
 				return true
@@ -779,7 +776,7 @@ func TestValues_OmitNested(t *testing.T) {
 		return false
 	}
 
-	for _, val := range []interface{}{123, a} {
+	for _, val := range []any{123, a} {
 		if !inSlice(val) {
 			t.Errorf("Values should have the value %v", val)
 		}
@@ -800,7 +797,7 @@ func TestValues_Nested(t *testing.T) {
 
 	s := Values(b)
 
-	inSlice := func(val interface{}) bool {
+	inSlice := func(val any) bool {
 		for _, v := range s {
 			if reflect.DeepEqual(v, val) {
 				return true
@@ -809,7 +806,7 @@ func TestValues_Nested(t *testing.T) {
 		return false
 	}
 
-	for _, val := range []interface{}{"example", 123} {
+	for _, val := range []any{"example", 123} {
 		if !inSlice(val) {
 			t.Errorf("Values should have the value %v", val)
 		}
@@ -831,7 +828,7 @@ func TestValues_Anonymous(t *testing.T) {
 
 	s := Values(b)
 
-	inSlice := func(val interface{}) bool {
+	inSlice := func(val any) bool {
 		for _, v := range s {
 			if reflect.DeepEqual(v, val) {
 				return true
@@ -840,7 +837,7 @@ func TestValues_Anonymous(t *testing.T) {
 		return false
 	}
 
-	for _, val := range []interface{}{"example", 123} {
+	for _, val := range []any{"example", 123} {
 		if !inSlice(val) {
 			t.Errorf("Values should have the value %v", val)
 		}
@@ -934,7 +931,7 @@ func TestFields_OmitNested(t *testing.T) {
 		t.Errorf("Fields should omit nested struct. Expecting 2 got: %d", len(s))
 	}
 
-	inSlice := func(val interface{}) bool {
+	inSlice := func(val any) bool {
 		for _, v := range s {
 			if reflect.DeepEqual(v.Name(), val) {
 				return true
@@ -943,7 +940,7 @@ func TestFields_OmitNested(t *testing.T) {
 		return false
 	}
 
-	for _, val := range []interface{}{"A", "C"} {
+	for _, val := range []any{"A", "C"} {
 		if !inSlice(val) {
 			t.Errorf("Fields should have the value %v", val)
 		}
@@ -965,7 +962,7 @@ func TestFields_Anonymous(t *testing.T) {
 
 	s := Fields(b)
 
-	inSlice := func(val interface{}) bool {
+	inSlice := func(val any) bool {
 		for _, v := range s {
 			if reflect.DeepEqual(v.Name(), val) {
 				return true
@@ -974,7 +971,7 @@ func TestFields_Anonymous(t *testing.T) {
 		return false
 	}
 
-	for _, val := range []interface{}{"A", "C"} {
+	for _, val := range []any{"A", "C"} {
 		if !inSlice(val) {
 			t.Errorf("Fields should have the value %v", val)
 		}
@@ -1045,7 +1042,6 @@ func TestIsZero_OmitNested(t *testing.T) {
 	if !ok {
 		t.Error("IsZero should return true because neither A nor B is initialized")
 	}
-
 }
 
 func TestIsZero_Nested(t *testing.T) {
@@ -1073,7 +1069,6 @@ func TestIsZero_Nested(t *testing.T) {
 	if !ok {
 		t.Error("IsZero should return true because neither A nor B is initialized")
 	}
-
 }
 
 func TestIsZero_Anonymous(t *testing.T) {
@@ -1274,7 +1269,7 @@ func TestNestedNilPointer(t *testing.T) {
 	defer func() {
 		err := recover()
 		if err != nil {
-			fmt.Printf("err %+v\n", err)
+			t.Logf("err %+v\n", err)
 			t.Error("Internal nil pointer should not panic")
 		}
 	}()
@@ -1316,7 +1311,6 @@ func (p *Person) String() string {
 }
 
 func TestTagWithStringOption(t *testing.T) {
-
 	type Address struct {
 		Country string  `json:"country"`
 		Person  *Person `json:"person,string"`
@@ -1335,7 +1329,7 @@ func TestTagWithStringOption(t *testing.T) {
 	defer func() {
 		err := recover()
 		if err != nil {
-			fmt.Printf("err %+v\n", err)
+			t.Logf("err %+v\n", err)
 			t.Error("Internal nil pointer should not panic")
 		}
 	}()
@@ -1377,7 +1371,7 @@ func TestNonStringerTagWithStringOption(t *testing.T) {
 	defer func() {
 		err := recover()
 		if err != nil {
-			fmt.Printf("err %+v\n", err)
+			t.Logf("err %+v\n", err)
 			t.Error("Internal nil pointer should not panic")
 		}
 	}()
@@ -1394,7 +1388,7 @@ func TestNonStringerTagWithStringOption(t *testing.T) {
 
 func TestMap_InterfaceValue(t *testing.T) {
 	type TestStruct struct {
-		A interface{}
+		A any
 	}
 
 	expected := []byte("test value")
@@ -1410,7 +1404,7 @@ func TestPointer2Pointer(t *testing.T) {
 	defer func() {
 		err := recover()
 		if err != nil {
-			fmt.Printf("err %+v\n", err)
+			t.Logf("err %+v\n", err)
 			t.Error("Internal nil pointer should not panic")
 		}
 	}()
@@ -1429,10 +1423,10 @@ func TestPointer2Pointer(t *testing.T) {
 
 func TestMap_InterfaceTypeWithMapValue(t *testing.T) {
 	type A struct {
-		Name    string      `structs:"name"`
-		IP      string      `structs:"ip"`
-		Query   string      `structs:"query"`
-		Payload interface{} `structs:"payload"`
+		Name    string `structs:"name"`
+		IP      string `structs:"ip"`
+		Query   string `structs:"query"`
+		Payload any    `structs:"payload"`
 	}
 
 	a := A{
@@ -1445,7 +1439,7 @@ func TestMap_InterfaceTypeWithMapValue(t *testing.T) {
 	defer func() {
 		err := recover()
 		if err != nil {
-			t.Error("Converting Map with an interface{} type with map value should not panic")
+			t.Error("Converting Map with an any type with map value should not panic")
 		}
 	}()
 

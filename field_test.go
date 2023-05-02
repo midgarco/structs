@@ -5,16 +5,17 @@ import (
 	"testing"
 )
 
-// A test struct that defines all cases
+// A test struct that defines all cases.
 type Foo struct {
-	A    string
-	B    int    `structs:"y"`
-	C    bool   `json:"c"`
-	d    string // not exported
-	E    *Baz
+	A string
+	B int    `structs:"y"`
+	C bool   `json:"c"`
+	d string // not exported
+	E *Baz
+	//nolint:govet // this is a purposeful test
 	x    string `xml:"x"` // not exported, with tag
 	Y    []string
-	Z    map[string]interface{}
+	Z    map[string]any
 	*Bar // embedded
 }
 

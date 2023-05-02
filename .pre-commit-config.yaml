@@ -2,7 +2,7 @@ exclude: '^package.json|package-lock.json|.*?\.tsv$'
 fail_fast: true 
 repos:
 -   repo: https://github.com/commitizen-tools/commitizen
-    rev: v2.42.1
+    rev: 3.2.0
     hooks:
         - id: commitizen
           stages: [commit-msg]
@@ -39,7 +39,7 @@ repos:
     -   id: check-yaml
         stages: [commit]
 -   repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.33.0
+    rev: v0.34.0
     hooks:
     -   id: markdownlint-fix
         stages: [commit]
@@ -50,7 +50,7 @@ repos:
     -   id: shellcheck
         stages: [commit]
 -   repo: https://github.com/pre-commit/mirrors-eslint
-    rev: 'v8.36.0'
+    rev: 'v8.39.0'
     hooks:
     -   id: eslint
         stages: [commit]
