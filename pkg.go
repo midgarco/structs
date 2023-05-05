@@ -1,3 +1,4 @@
+// Forked from devnw/structs
 // Package structs contains various utilities to work with Go (Golang) structs. It was
 // initially used by me to convert a struct into a `map[string]any`. With
 // time I've added other utilities for structs.  It's basically a high level
@@ -13,7 +14,7 @@
 //
 // ## Install
 //
-// `go get go.devnw.com/structs`
+// `go get github.com/midgarco/structs`
 //
 // ## Usage and Examples
 //
