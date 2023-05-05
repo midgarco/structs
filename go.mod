@@ -1,3 +1,3 @@
-module go.devnw.com/structs
+module github.com/midgarco/structs
 
 go 1.18
